@@ -69,7 +69,7 @@ const chat = async () => {
             {
                 type: 'input',
                 name: 'userInput',
-                message: chalk.cyanBright("You:")
+                message: chalk.yellowBright("You:")
             }
         ])
 
@@ -112,7 +112,7 @@ const chat = async () => {
             content: text
         })
 
-        console.log(chalk.magentaBright("\nPayPalBot: " + text + '\n'))
+        console.log(chalk.blueBright("\nPayPalBot: " + text + '\n'))
 
     }
 }
