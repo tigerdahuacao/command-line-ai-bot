@@ -1,12 +1,15 @@
 import { config } from "@dotenvx/dotenvx";
+
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
 import debug from "debug";
+
 import { PayPalAgentToolkit } from '@paypal/agent-toolkit/ai-sdk'
 import { generateId, generateText, Message } from "ai";
-import { createDeepSeek } from '@ai-sdk/deepseek';
-import { systemPrompt } from "src/constants/systemPrompt";
+
+import { systemPromptInvocing, systemPromptPaymentShipping } from "src/constants/systemPrompt";
+import { getDeepSeekModel, getVolcanoModel } from "./utils/llm/model"
 
 
 const logger = debug('cmd-line-bot');
@@ -29,10 +32,6 @@ console.clear();
 console.log(chalk.greenBright.bold("Welcome, let's get start!"));
 console.log(chalk.gray("Type 'exit' to quit or 'clear' to reset memory.\n"))
 
-//vercel ai 目前所支持的大语言模型: https://ai-sdk.dev/providers/ai-sdk-providers/deepseek
-const deepseek = createDeepSeek({
-    apiKey: process.env.DEEPSEEK_API_KEY ?? '',
-});
 
 const chat = async () => {
     const paypalToolkit = new PayPalAgentToolkit({
@@ -40,12 +39,12 @@ const chat = async () => {
         clientSecret: ppConfig.clientSecret,
         configuration: {
             actions: {
-                invoices: {
-                    create: true,
-                    list: true,
-                    send: true,
-                    generateQRC: true
-                },
+                // invoices: {
+                //     create: true,
+                //     list: true,
+                //     send: true,
+                //     generateQRC: true
+                // },
                 products: {
                     create: true,
                     list: true,
@@ -62,7 +61,9 @@ const chat = async () => {
         }
     })
     const tools = { ...paypalToolkit.getTools() };
-    const llm = deepseek('deepseek-chat');
+
+    // const llm = getVolcanoModel();
+    const llm = getDeepSeekModel();
 
     while (true) {
         const { userInput } = await inquirer.prompt([
@@ -96,7 +97,8 @@ const chat = async () => {
             model: llm,
             messages: messageHistory,
             tools,
-            system: systemPrompt,
+            // system: systemPromptInvocing,
+            system: systemPromptPaymentShipping,
             maxRetries: 1,
             maxSteps: 3,
             onStepFinish: ({ toolCalls, toolResults }) => {

@@ -11,6 +11,9 @@ importers:
       '@ai-sdk/deepseek':
         specifier: ^0.2.14
         version: 0.2.14(zod@3.25.41)
+      '@ai-sdk/openai-compatible':
+        specifier: ^0.2.14
+        version: 0.2.14(zod@3.25.41)
       '@dotenvx/dotenvx':
         specifier: ^1.44.1
         version: 1.44.1
