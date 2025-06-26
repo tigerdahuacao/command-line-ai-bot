@@ -62,8 +62,8 @@ const chat = async () => {
     })
     const tools = { ...paypalToolkit.getTools() };
 
-    // const llm = getVolcanoModel();
-    const llm = getDeepSeekModel();
+    const llm = getVolcanoModel();
+    // const llm = getDeepSeekModel();
 
     while (true) {
         const { userInput } = await inquirer.prompt([
